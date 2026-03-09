@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Users, Target, MessageSquare, TrendingUp, ChevronRight, ClipboardCheck, BrainCircuit, Award, AlertCircle, Loader2, UserCheck, Trash2, Settings2, PlusCircle, Database } from "lucide-react";
+import { Users, Target, MessageSquare, TrendingUp, ChevronRight, ClipboardCheck, BrainCircuit, Award, AlertCircle, Loader2, UserCheck, Settings2, Database, CloudDownload } from "lucide-react";
 
 // ─── 雙軌佈景主題引擎 (Dual-Theme Engine) ────────────────────────────────────
 const THEMES = {
@@ -22,14 +22,14 @@ const THEMES = {
 };
 
 // --- 配置區 ---
-// 您的 GAS Web App URL (已保留)
+// 【極度重要】請確保這裡填入的是您 GAS 最新部署的網址！
 const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby5S12hnwnrwp0ghbfS5PfqFMS3LBwe7wpQCLsV3sQGw6CQ2Z5mdQEfVtql4Ai4-hI9/exec"; 
 
 // ─── 官方預設題庫 (Official Banks) ───────────────────────────────────────────
 const COMPETENCY_BANK = [
   { id:"c1",  dim:"溝通協調", q:"當兩位同事對同一客訴處理方式意見分歧時，你會：", options:["傾聽雙方，找出共識並提出折衷方案","請主管裁決，避免自己介入","選擇支持較有經驗的同事","先安撫客戶，事後再討論內部分歧"], scores:[4,1,2,3] },
   { id:"c2",  dim:"問題解決", q:"POS 系統突然當機，排隊客人越來越多，你的第一反應是：", options:["立即告知主管並嘗試重啟系統，同時安撫客戶","請客人稍等，一直等待系統自行恢復","請同事代為處理，自己暫時迴避","直接關閉門市暫停服務"], scores:[4,1,2,0] },
-  { id:"c3",  dim:"顧客服務", q:"客戶要求退貨，但已超過退換貨期限，你會：", options:["說明政策同時表達理解，提供可行替代方案","直接拒絕，規定就是規定","私自答應退貨，事後再說","叫客人去找主管解決"], scores:[4,1,0,2] },
+  { id:"c3",  dim:"顧客服務", q:"客戶要求退貨，但已超過退換貨期限，你会：", options:["說明政策同時表達理解，提供可行替代方案","直接拒絕，規定就是規定","私自答應退貨，事後再說","叫客人去找主管解決"], scores:[4,1,0,2] },
   { id:"c4",  dim:"商品銷售", q:"客戶說「我只是看看」時，你會如何應對？", options:["給予空間，觀察適機主動介紹符合需求的商品","立刻熱情推薦最貴的方案","讓客人自行瀏覽，不打擾","詢問預算後立刻報價"], scores:[4,2,1,3] },
   { id:"c5",  dim:"POS操作", q:"關於 POS 系統，下列何者描述最正確？", options:["可用於庫存管理、交易記錄與客戶資料查詢","只能用來結帳收款","每天下班前不需要做結帳對帳","所有折扣都可以員工自行輸入"], scores:[4,1,0,0] },
 ];
@@ -59,7 +59,6 @@ function pickRandom(arr, n) {
 
 // ─── 子組件 ────────────────────────────────────────────────────────────────
 
-// 圓形分數動畫組件
 function CircleScore({ score, colors }) {
   const [p, setP] = useState(0);
   useEffect(() => { setTimeout(() => setP(score), 400); }, [score]);
@@ -81,7 +80,6 @@ function CircleScore({ score, colors }) {
   );
 }
 
-// 測驗卡片組件
 function QuestionBlock({ questions, answers, setAnswers, colorKey, colors }) {
   const color = { competency:colors.accent, disc:colors.gold, situational:colors.orange }[colorKey];
   const discColor = { D:"#FF6B35", I:"#FFD700", S:"#4CAF50", C:"#7B5EA7" };
@@ -89,7 +87,7 @@ function QuestionBlock({ questions, answers, setAnswers, colorKey, colors }) {
     <div key={q.id} style={{ background:colors.card, border:`1px solid ${colors.border}`, borderRadius:16, padding:"22px 26px", marginBottom:14 }}>
       <div style={{ display:"flex", gap:8, marginBottom:10 }}>
         {q.dim && <span style={{ background:`${color}22`, color, borderRadius:6, padding:"2px 10px", fontSize:12, fontWeight:600 }}>{q.dim}</span>}
-        {q._custom && <span style={{ background:`${colors.purple}22`, color:colors.purple, borderRadius:6, padding:"2px 10px", fontSize:12, fontWeight:700 }}>★ HR 自訂題</span>}
+        {q._custom && <span style={{ background:`${colors.purple}22`, color:colors.purple, borderRadius:6, padding:"2px 10px", fontSize:12, fontWeight:700 }}>★ 雲端動態題</span>}
       </div>
       <div style={{ fontSize:15, fontWeight:600, marginBottom:16, lineHeight:1.6, color:colors.text }}>Q{qi+1}. {q.q}</div>
       {q.options.map((opt, oi) => {
@@ -109,113 +107,6 @@ function QuestionBlock({ questions, answers, setAnswers, colorKey, colors }) {
   ));
 }
 
-// ─── HR 題庫自訂編輯器 (The HR Studio) ─────────────────────────────────────────
-function QuestionEditor({ type, customQuestions, setCustomQuestions, onClose, colors }) {
-  const META = {
-    competency: { label:"職能測驗", color:colors.accent, icon: <Award size={18}/> },
-    situational:{ label:"情境模擬", color:colors.orange, icon: <MessageSquare size={18}/> },
-  };
-  const { label, color, icon } = META[type];
-  const [q, setQ] = useState("");
-  const [dim, setDim] = useState("門市實務");
-  const [options, setOptions] = useState(["","","",""]);
-  const [scores, setScores] = useState([0,0,0,0]);
-  const [err, setErr] = useState("");
-
-  function add() {
-    if (!q.trim()) { setErr("請輸入題目內容"); return; }
-    if (options.some(o => !o.trim())) { setErr("請填寫四個完整選項"); return; }
-    
-    const newQ = {
-      id: `custom_${type}_${Date.now()}`, 
-      _custom: true, 
-      q,
-      ...(type === "competency" ? { dim, options:[...options], scores:[...scores] } : { options:[...options], scores:[...scores] })
-    };
-    
-    setCustomQuestions(prev => ({ ...prev, [type]: [...(prev[type]||[]), newQ] }));
-    setQ(""); setOptions(["","","",""]); setScores([0,0,0,0]); setErr("");
-  }
-
-  function remove(id) {
-    setCustomQuestions(prev => ({ ...prev, [type]: prev[type].filter(x => x.id !== id) }));
-  }
-
-  const list = customQuestions[type] || [];
-  const inp = { width:"100%", padding:"10px 14px", borderRadius:8, background:colors.inputBg, border:`1px solid ${colors.inputBorder}`, color:colors.text, fontSize:14, outline:"none", boxSizing:"border-box" };
-
-  return (
-    <div style={{ position:"fixed", inset:0, background:colors.overlay, zIndex:200, overflowY:"auto", display:"flex", justifyContent:"center", padding:"24px 16px", animation: "fadeIn 0.2s ease" }}>
-      <div style={{ width:"100%", maxWidth:600 }}>
-        
-        {/* 編輯器面板 */}
-        <div style={{ background:colors.card, border:`1px solid ${color}44`, borderRadius:16, padding:"24px", marginBottom:16, boxShadow:`0 10px 30px rgba(0,0,0,0.1)` }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20, paddingBottom:16, borderBottom:`1px solid ${colors.border}` }}>
-            <div style={{ fontSize:18, fontWeight:800, color, display:"flex", alignItems:"center", gap:8 }}>
-              {icon} 新增「{label}」自訂題
-            </div>
-            <button onClick={onClose} style={{ background:"transparent", border:`1px solid ${colors.border}`, color:colors.muted, borderRadius:8, padding:"6px 14px", cursor:"pointer", fontSize:13, fontWeight:700 }}>✕ 關閉儲存</button>
-          </div>
-
-          {type === "competency" && (
-            <div style={{ marginBottom:16 }}>
-              <label style={{ fontSize:13, color:colors.muted, display:"block", marginBottom:6, fontWeight:700 }}>考核維度標籤</label>
-              <select value={dim} onChange={e => setDim(e.target.value)} style={{ ...inp, fontWeight:600 }}>
-                {["溝通協調","問題解決","顧客服務","商品銷售","POS操作","門市實務"].map(d => <option key={d}>{d}</option>)}
-              </select>
-            </div>
-          )}
-
-          <div style={{ marginBottom:20 }}>
-            <label style={{ fontSize:13, color:colors.muted, display:"block", marginBottom:6, fontWeight:700 }}>實務情境題目 *</label>
-            <textarea value={q} onChange={e => setQ(e.target.value)} placeholder="請描述門市發生的狀況..." rows={3} style={{ ...inp, resize:"vertical" }} />
-          </div>
-
-          <div style={{ marginBottom:8 }}>
-            <label style={{ fontSize:13, color:colors.muted, display:"block", marginBottom:6, fontWeight:700 }}>設定選項與配分 (0-4分)</label>
-            {options.map((opt, i) => (
-              <div key={i} style={{ display:"flex", gap:10, marginBottom:10, alignItems:"center" }}>
-                <div style={{ width:28, height:28, borderRadius:"50%", background:`${color}15`, border:`1px solid ${color}44`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:800, color, flexShrink:0 }}>
-                  {["A","B","C","D"][i]}
-                </div>
-                <input value={opt} onChange={e => { const o=[...options]; o[i]=e.target.value; setOptions(o); }} placeholder={`輸入選項 ${["A","B","C","D"][i]} 應對方式`} style={{ ...inp, flex:1 }} />
-                <select value={scores[i]} onChange={e => { const s=[...scores]; s[i]=Number(e.target.value); setScores(s); }} style={{ ...inp, width:76, padding:"8px", color:colors.green, fontWeight:700 }}>
-                  {[0,1,2,3,4].map(v => <option key={v} value={v}>{v} 分</option>)}
-                </select>
-              </div>
-            ))}
-          </div>
-
-          {err && <div style={{ color:colors.red, fontSize:13, marginBottom:12, fontWeight:700, display:"flex", alignItems:"center", gap:6 }}><AlertCircle size={14}/> {err}</div>}
-          
-          <button onClick={add} style={{ width:"100%", padding:"14px", borderRadius:10, background:`linear-gradient(135deg,${color},${color}dd)`, border:"none", color:colors.btnText, fontWeight:800, fontSize:15, cursor:"pointer", marginTop:8, display:"flex", justifyContent:"center", alignItems:"center", gap:8 }}>
-            <PlusCircle size={18} /> 將此題加入題庫池
-          </button>
-        </div>
-
-        {/* 已自訂題目列表 */}
-        {list.length > 0 && (
-          <div style={{ background:colors.card, border:`1px solid ${colors.border}`, borderRadius:16, padding:"20px 24px" }}>
-            <div style={{ fontSize:14, fontWeight:700, color:colors.text, marginBottom:16, display:"flex", alignItems:"center", gap:8 }}>
-              <Database size={16} color={colors.muted}/> 您專屬的「{label}」題庫清單 ({list.length} 題)
-            </div>
-            {list.map((cq, i) => (
-              <div key={cq.id} style={{ background:colors.inputBg, borderRadius:12, padding:"14px 16px", marginBottom:10, display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, border:`1px solid ${colors.border}` }}>
-                <div style={{ fontSize:13, color:colors.text, lineHeight:1.6, flex:1 }}>
-                  <span style={{ color, fontWeight:800, marginRight:6 }}>Q{i+1}.</span>{cq.q}
-                </div>
-                <button onClick={() => remove(cq.id)} style={{ background:`${colors.red}15`, border:`1px solid ${colors.red}33`, color:colors.red, borderRadius:8, padding:"6px 12px", cursor:"pointer", fontSize:12, fontWeight:700, flexShrink:0, transition:"all 0.2s" }}>
-                  刪除
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function SuitabilityAssessment() {
   const [isDark, setIsDark] = useState(false);
@@ -225,18 +116,9 @@ export default function SuitabilityAssessment() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ name:"", position:"", experience:"", motivation:"" });
   
-  const [customBanks, setCustomBanks] = useState(() => {
-    try {
-      const saved = localStorage.getItem('money_custom_question_banks');
-      return saved ? JSON.parse(saved) : { competency: [], disc: [], situational: [] };
-    } catch (e) {
-      return { competency: [], disc: [], situational: [] };
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem('money_custom_question_banks', JSON.stringify(customBanks));
-  }, [customBanks]);
+  // 系統狀態
+  const [appStatus, setAppStatus] = useState("loading"); // 'loading' | 'ready'
+  const [customBanks, setCustomBanks] = useState({ competency: [], situational: [] });
 
   const [active, setActive] = useState({ competency:[], disc:[], situational:[] });
   const [cAns, setCAns] = useState({});
@@ -248,7 +130,7 @@ export default function SuitabilityAssessment() {
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   
-  const [hrEditorMode, setHrEditorMode] = useState(null); 
+  const [showHrInfo, setShowHrInfo] = useState(false); 
 
   const DISC_COLOR = { D:"#FF6B35", I:"#FFD700", S:"#4CAF50", C:"#7B5EA7" };
   const DISC_LABEL = { D:"掌控型（老虎）", I:"影響型（孔雀）", S:"穩定型（無尾熊）", C:"謹慎型（貓頭鷹）" };
@@ -259,6 +141,40 @@ export default function SuitabilityAssessment() {
     C:"謹慎分析、重視細節，適合需要高精確度流程操作的後台支援。",
   };
 
+  // 🚀 核心升級：載入時自動從 Google Sheets 拉取自訂題庫
+  useEffect(() => {
+    async function fetchCloudQuestions() {
+      // 防止在未替換網址前報錯
+      if (GAS_WEB_APP_URL.includes("請替換成您真實的GAS網址ID")) {
+        console.warn("💡 提示：您尚未替換 GAS_WEB_APP_URL，目前將使用預設官方題庫進行展示。");
+        setAppStatus("ready");
+        return;
+      }
+
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: "POST", 
+          headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+          body: JSON.stringify({ action: "getQuestions" }), 
+          redirect: "follow"
+        });
+        
+        const text = await response.text();
+        const data = JSON.parse(text);
+        
+        if (data.success && data.questions) {
+          setCustomBanks(data.questions);
+        }
+        setAppStatus("ready");
+      } catch (err) {
+        console.error("題庫同步失敗，使用預設官方題庫：", err);
+        // 就算失敗也讓系統能繼續運作（使用官方預設）
+        setAppStatus("ready");
+      }
+    }
+    fetchCloudQuestions();
+  }, []);
+
   const drawQuestions = () => {
     setActive({
       competency: pickRandom([...COMPETENCY_BANK, ...customBanks.competency], 3), 
@@ -268,9 +184,12 @@ export default function SuitabilityAssessment() {
     setCAns({}); setDAns({}); setSAns({});
   };
 
+  // 當題庫下載完畢後，進行第一次抽題
   useEffect(() => {
-    drawQuestions();
-  }, [customBanks]); 
+    if (appStatus === "ready") {
+      drawQuestions();
+    }
+  }, [appStatus, customBanks]); 
 
   function calcResult() {
     let cs = 0;
@@ -295,6 +214,16 @@ export default function SuitabilityAssessment() {
   // 🛠️ 裝甲防護升級版 fetchAI：攔截所有不可預期的崩潰
   async function fetchAI(scores) {
     setAiLoading(true);
+
+    // 防止在未替換網址前報錯
+    if (GAS_WEB_APP_URL.includes("請替換成您真實的GAS網址ID")) {
+      setTimeout(() => {
+        setAiText("【系統提示】這是預設展示評語。要獲得真實的 AI 分析，請將程式碼中的 GAS_WEB_APP_URL 替換為您部署的 Google Apps Script 網址。");
+        setAiLoading(false);
+      }, 1500);
+      return;
+    }
+
     try {
       const payload = {
         name: form.name, position: form.position, experience: form.experience, motivation: form.motivation, scores: scores
@@ -361,6 +290,17 @@ export default function SuitabilityAssessment() {
     return isDark ? "linear-gradient(135deg,#2a0d0d,#3a1515)" : "linear-gradient(135deg,#FEF2F2,#FEE2E2)";
   };
 
+  // 全螢幕載入畫面
+  if (appStatus === "loading") {
+    return (
+      <div style={{ minHeight:"100vh", background:colors.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:colors.text }}>
+        <CloudDownload size={48} color={colors.accent} className="animate-bounce" style={{ marginBottom: 16 }} />
+        <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>正在同步雲端總部題庫...</h2>
+        <p style={{ color: colors.muted, fontSize: 14 }}>馬尼智能人才評測系統</p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight:"100vh", background:colors.bg, fontFamily:"'Noto Sans TC','PingFang TC',sans-serif", color:colors.text, paddingBottom:48, transition:"background 0.3s ease, color 0.3s ease", display:"flex", flexDirection:"column" }}>
 
@@ -372,31 +312,39 @@ export default function SuitabilityAssessment() {
         </div>
         <div style={{ display:'flex', gap: 12, alignItems:'center' }}>
           
-          {/* HR 專屬：題庫設定管理員 */}
-          <div style={{ display:'flex', background:colors.inputBg, borderRadius:20, padding:4, border:`1px solid ${colors.border}` }}>
-             <button onClick={() => setHrEditorMode('competency')} style={{ padding:"6px 12px", borderRadius:16, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", background: "transparent", color: colors.muted, display:"flex", alignItems:"center", gap:6, transition:"all 0.2s" }} title="新增職能測驗自訂題">
-               <Settings2 size={14}/> 職能題庫
-             </button>
-             <button onClick={() => setHrEditorMode('situational')} style={{ padding:"6px 12px", borderRadius:16, fontSize:13, fontWeight:700, cursor:"pointer", border:"none", background: "transparent", color: colors.muted, display:"flex", alignItems:"center", gap:6, transition:"all 0.2s" }} title="新增情境模擬自訂題">
-               <Settings2 size={14}/> 情境題庫
-             </button>
-          </div>
+          <button onClick={() => setShowHrInfo(true)} style={{ padding:"6px 12px", borderRadius:20, fontSize:13, fontWeight:700, cursor:"pointer", border:`1px solid ${colors.border}`, background: colors.inputBg, color: colors.muted, display:"flex", alignItems:"center", gap:6, transition:"all 0.2s" }} title="HR 題庫管理">
+            <Database size={14}/> 雲端題庫 ({customBanks.competency.length + customBanks.situational.length})
+          </button>
 
           <button onClick={() => setIsDark(!isDark)} style={{ background:colors.inputBg, border:`1px solid ${colors.border}`, borderRadius:20, padding:"6px 12px", fontSize:14, cursor:"pointer", transition:"all 0.3s", display:"flex", alignItems:"center", gap:6 }}>
-            {isDark ? "☀️ 明亮" : "🌙 暗黑"}
+            {isDark ? "☀️" : "🌙"}
           </button>
         </div>
       </div>
 
-      {/* HR 編輯器 Modal Overlay */}
-      {hrEditorMode && (
-        <QuestionEditor 
-          type={hrEditorMode} 
-          customQuestions={customBanks} 
-          setCustomQuestions={setCustomBanks} 
-          onClose={() => setHrEditorMode(null)} 
-          colors={colors} 
-        />
+      {/* HR 提示 Modal */}
+      {showHrInfo && (
+        <div style={{ position:"fixed", inset:0, background:colors.overlay, zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:"24px" }}>
+          <div style={{ background:colors.card, border:`1px solid ${colors.border}`, borderRadius:16, padding:"24px", maxWidth:400, width:"100%" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10, fontSize:18, fontWeight:800, color:colors.accent, marginBottom:16 }}>
+              <CloudDownload size={24}/> 雲端試算表題庫架構
+            </div>
+            <p style={{ fontSize:14, lineHeight:1.7, color:colors.text, marginBottom:12 }}>
+              系統已全面升級為「雲端同步架構」！您的所有自訂題庫已移轉至 Google Sheets。
+            </p>
+            <div style={{ background:colors.inputBg, padding:"12px", borderRadius:8, border:`1px solid ${colors.border}`, fontSize:13, color:colors.muted, marginBottom:20, lineHeight:1.6 }}>
+              <strong>👉 如何新增或修改題目？</strong><br/>
+              1. 開啟您的 Google 雲端硬碟。<br/>
+              2. 打開「馬尼通訊_面試紀錄」試算表。<br/>
+              3. 切換到 <strong>「自訂題庫」</strong> 分頁。<br/>
+              4. 像用 Excel 一樣直接輸入題目與配分。<br/>
+              5. 儲存後，任何求職者重新整理本網頁，就會自動抽到您的新題目！
+            </div>
+            <button onClick={() => setShowHrInfo(false)} style={{ width:"100%", padding:"12px", background:`linear-gradient(135deg,${colors.accent},${colors.accent}dd)`, border:"none", borderRadius:8, color:colors.btnText, fontWeight:800, cursor:"pointer" }}>
+              我知道了
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Step bar */}
