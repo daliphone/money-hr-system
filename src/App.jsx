@@ -83,6 +83,37 @@ const BEHAVIOR_BANK = [
     q:"公司推行新的服裝規定，但你認為原本的裝扮更專業：",
     opts:["遵守新規定，若有意見透過正式管道反映","繼續依個人判斷穿著","找藉口說沒看到通知","在同事間引發對新規定的討論"],
     s:[4,1,2,0] },
+  // 🔴 反向題 / 誤導性題 ── 服從性（共 6 題，三種偽裝手法）
+
+  // 【手法一：偽裝成「決策能力」題】
+  { id:"o_r1", trait:"obedience", reverse:true,
+    q:"你同時負責三項門市任務，但今天人力短缺只能完成兩項，你會怎麼做？",
+    opts:["詢問主管哪兩項優先，依指示執行","自己判斷哪兩項投報率最高，先做那兩項","先完成最快的兩項，剩下的再報告主管","跟主管說今天做不完，請他明天再派人"],
+    s:[4,1,2,2] },
+  { id:"o_r2", trait:"obedience", reverse:true,
+    q:"主管交辦你一個任務，但你覺得他給的方法步驟比較繁瑣，你有更快的做法，你會：",
+    opts:["直接用自己的方法，反正結果一樣","先用主管的方法完成，再向他說明你的方法並確認下次是否可以調整","跟主管說他的方法太慢，換你的","用自己的方法做，完成後再跟主管說"],
+    s:[0,4,0,1] },
+
+  // 【手法二：偽裝成「團隊合作 / 帶人」題】
+  { id:"o_r3", trait:"obedience", reverse:true,
+    q:"新進同事做事方式和公司標準不同，但他的方式在某些情況效果也不錯，你會：",
+    opts:["讓他自由發揮，只要業績好就好","跟他說明公司的標準做法是什麼，請他先依規定執行","和他討論，找出比公司現有標準更好的做法後一起提給主管","私下觀察一段時間再說，不用急著介入"],
+    s:[0,4,3,1] },
+  { id:"o_r4", trait:"obedience", reverse:true,
+    q:"你帶著實習生，主管交代要按照標準話術教他，但你覺得自己的話術更有效，你會：",
+    opts:["教他主管規定的標準話術，自己的心得私下分享給他參考","直接教他我自己的話術，因為這樣對他更有幫助","兩種都教，讓他自己選擇","先問主管可不可以調整教學內容，確認後再決定"],
+    s:[3,0,1,4] },
+
+  // 【手法三：價值觀陳述題（最難識破）】
+  { id:"o_r5", trait:"obedience", reverse:true,
+    q:"關於「制度與彈性」，你最認同哪個觀點？",
+    opts:["制度是死的，人是活的，懂得靈活變通才是高手","好的制度值得遵守，但遇到明顯不合理的我會選擇跳過","先把規定做好，再透過正式管道推動改變","制度只是參考，實際怎麼做要看當下狀況決定"],
+    s:[0,1,4,0] },
+  { id:"o_r6", trait:"obedience", reverse:true,
+    q:"你最認同哪一種「優秀員工」的定義？",
+    opts:["能獨立判斷、敢於挑戰上級錯誤決策的人","在規範內把事情做到最好，並用正確方式影響決策的人","懂得選擇性執行，把精力放在真正重要的事上","有自己的原則，不會因為上面說什麼就跟著做什麼"],
+    s:[1,4,0,0] },
 
   /* ─── 自律性 discipline ─── */
   { id:"d1", trait:"discipline",
@@ -113,6 +144,29 @@ const BEHAVIOR_BANK = [
     q:"你知道某個工作習慣影響你的效率，但改起來很不舒服：",
     opts:["強迫自己養成新習慣，即使初期痛苦","改一點點，不要太勉強","打算改但一直沒行動","覺得現在這樣也還可以"],
     s:[4,2,1,0] },
+  // 🔴 反向題 / 誤導性題 ── 自律性（共 4 題）
+
+  // 【手法一：偽裝成「工作哲學」題】
+  { id:"d_r1", trait:"discipline", reverse:true,
+    q:"關於工作效率，你最認同哪個觀點？",
+    opts:["找到最省力的方式完成任務，把多的精力留給生活","聰明工作比努力工作重要，方法對了不用特別拼","穩定執行高標準，長期來看才是真正的效率","工作效率看天賦，努力只能補先天不足的部分"],
+    s:[0,1,4,0] },
+  { id:"d_r2", trait:"discipline", reverse:true,
+    q:"你如何看待「沒人監督時的工作狀態」這件事？",
+    opts:["沒人看的時候稍微放鬆是合理的，人都需要喘息","自我要求不需要別人監督，標準是自己設的","有人看才比較能維持高效率，這是人之常情","主管在不在場，我的工作方式都一樣"],
+    s:[0,3,1,4] },
+
+  // 【手法二：偽裝成「自我認識」題】
+  { id:"d_r3", trait:"discipline", reverse:true,
+    q:"朋友形容你做事的方式，最可能說的是：",
+    opts:["很有效率，從來不做多餘的事","做事穩定，說要做的事一定會完成","比較隨性，但關鍵時刻靠得住","很聰明，懂得把力氣花在刀口上"],
+    s:[1,4,0,1] },
+
+  // 【手法三：情境偽裝成「健康工作觀」題】
+  { id:"d_r4", trait:"discipline", reverse:true,
+    q:"你設定了一個個人成長目標，但最近工作很忙又很累，你的心態是：",
+    opts:["身體是革命的本錢，累了就先暫停，健康比目標重要","稍微放慢節奏，但不完全放棄","找出最小可執行的方式維持進度，哪怕每天只做一點點","目標是自己設的，當然也可以自己調整，彈性一點沒關係"],
+    s:[0,2,4,1] },
 
   /* ─── 學習心 learning ─── */
   { id:"l1", trait:"learning",
@@ -173,6 +227,29 @@ const BEHAVIOR_BANK = [
     q:"門市剛換了一批新機型，你尚未完全熟悉規格：",
     opts:["主動在開店前先研究一遍並試用","等客人來問再查","有需要再說，先顧好手邊的工作","靠同事幫忙回答就好"],
     s:[4,2,1,0] },
+  // 🔴 反向題 / 誤導性題 ── 積極度（共 4 題）
+
+  // 【手法一：偽裝成「銷售風格」題】
+  { id:"p_r1", trait:"proactivity", reverse:true,
+    q:"你認為最好的業務風格是什麼？",
+    opts:["穩扎穩打，服務好每個進門的客人就夠了","等客人表現出需求再出手，不強迫推銷才是尊重","主動創造每一個銷售機會，不等客人先開口","客人緣好自然業績好，刻意衝業績反而失去真誠"],
+    s:[1,0,4,0] },
+  { id:"p_r2", trait:"proactivity", reverse:true,
+    q:"對於「超出職責範圍」的事，你的態度是？",
+    opts:["那不是我負責的，把本分做好就行","看情況，重要的我會多做一點","只要對公司整體有益，我會主動去做","等主管指派再說，免得做了方向不對"],
+    s:[0,2,4,1] },
+
+  // 【手法二：偽裝成「工作生活平衡」題】
+  { id:"p_r3", trait:"proactivity", reverse:true,
+    q:"業績目標已達成，還有幾天才月底，你覺得：",
+    opts:["稍微放鬆沒問題，已完成目標就是對公司有交代","可以喘口氣，但還是要維持基本服務水準","目標只是最低標，繼續衝才能在考績上拉開差距","工作不是全部，達標之後好好照顧自己也很重要"],
+    s:[1,2,4,0] },
+
+  // 【手法三：價值觀陳述，偽裝成「人生觀」題】
+  { id:"p_r4", trait:"proactivity", reverse:true,
+    q:"你最認同哪一句話？",
+    opts:["把交代的事做好就夠了，不需要一直往前衝","凡事先把本分做到，多的靠機緣","機會是創造的，不主動出擊永遠等不到","低調做人，高調做事，不必讓人覺得太積極"],
+    s:[0,1,4,1] },
 
   /* ─── 抗壓性 stress ─── */
   { id:"s1", trait:"stress",
@@ -203,6 +280,29 @@ const BEHAVIOR_BANK = [
     q:"你在現場被客人當面比較競爭對手說對方更好，你的反應是：",
     opts:["冷靜聆聽，找出客人真正的需求後針對優勢回應","有點慌，支支吾吾","直接說對方哪裡不好","沉默或把客人交給同事"],
     s:[4,2,1,0] },
+  // 🔴 反向題 / 誤導性題 ── 抗壓性（共 4 題）
+
+  // 【手法一：偽裝成「心理健康觀」題】
+  { id:"s_r1", trait:"stress", reverse:true,
+    q:"你認為面對工作壓力最健康的方式是？",
+    opts:["適時抽離、保護自己，心理健康比業績重要","壓力來了先冷靜，找出問題根源再解決","短暫釋放情緒後繼續面對，撐過去就會成長","告訴自己這不是自己的問題，不讓外部因素影響心情"],
+    s:[1,4,3,0] },
+  { id:"s_r2", trait:"stress", reverse:true,
+    q:"工作狀態連續幾週不好，你最可能的解讀是？",
+    opts:["可能這份工作不適合我，是時候重新考慮","大概是環境或同事的問題，跟我個人關係不大","需要找出原因，從自己可以改變的地方開始調整","正常的低潮期，每個人都會有，撐過去就好"],
+    s:[0,0,4,3] },
+
+  // 【手法二：偽裝成「自我認識」題】
+  { id:"s_r3", trait:"stress", reverse:true,
+    q:"朋友最常說你在壓力下的反應是？",
+    opts:["容易情緒化，但事後恢復快","比較需要時間消化，不太能立刻繼續","壓力越大越能激發潛力，越難越有勁","壓力大時會先撤退，給自己緩衝空間"],
+    s:[2,1,4,0] },
+
+  // 【手法三：偽裝成「職涯觀」價值觀陳述】
+  { id:"s_r4", trait:"stress", reverse:true,
+    q:"關於「在困難環境中工作」，你最認同哪個說法？",
+    opts:["困難環境是最好的磨練，能撐過去的人最值錢","環境太差會消耗人，聰明人會選擇對的環境","挑戰讓人成長，但要懂得設定自己的底線","如果環境一直讓你不舒服，換個地方才是對的"],
+    s:[4,1,3,0] },
 
   /* ─── 團隊協作 teamwork ─── */
   { id:"t1", trait:"teamwork",
@@ -309,7 +409,7 @@ function ProgressDots({ step, total }) {
   );
 }
 
-function TraitBar({ trait, value }) {
+function TraitBar({ trait, value, warning }) {
   const m = TRAIT_META[trait];
   const Icon = m.icon;
   const grade = value >= 80 ? "優秀" : value >= 60 ? "良好" : value >= 40 ? "普通" : "待加強";
@@ -323,6 +423,13 @@ function TraitBar({ trait, value }) {
             <Icon size={14} color={m.color} />
           </div>
           <span style={{ fontSize:13, fontWeight:700, color:T.text }}>{m.label}</span>
+          {warning && (
+            <span style={{ fontSize:10, fontWeight:800, color:"#92400E",
+              background:"#FEF3C7", border:"1px solid #FCD34D",
+              padding:"2px 7px", borderRadius:4, display:"flex", alignItems:"center", gap:3 }}>
+              ⚠ 答題不一致
+            </span>
+          )}
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:8 }}>
           <span style={{ fontSize:11, fontWeight:700, color:gradeColor,
@@ -337,6 +444,21 @@ function TraitBar({ trait, value }) {
           borderRadius:5, transition:"width 1.6s cubic-bezier(.25,.8,.25,1)"
         }} />
       </div>
+      {warning && (
+        <div style={{ marginTop:8, padding:"10px 12px", borderRadius:8,
+          background:"#FFFBEB", border:"1px solid #FCD34D", fontSize:12, lineHeight:1.6 }}>
+          <div style={{ fontWeight:700, color:"#92400E", marginBottom:6 }}>📋 建議面試追問此維度</div>
+          <div style={{ color:"#78350F", marginBottom:4 }}>
+            高分答題：<span style={{ color:T.green }}>「{warning.highAns}」</span>
+          </div>
+          <div style={{ color:"#78350F" }}>
+            低分答題：<span style={{ color:T.red }}>「{warning.lowAns}」</span>
+          </div>
+          <div style={{ marginTop:6, color:"#92400E", fontStyle:"italic" }}>
+            → {warning.msg}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -404,18 +526,46 @@ export default function ManiTalentV3() {
 
   const scrollTop = () => topRef.current?.scrollIntoView({ behavior:"smooth" });
 
-  // ── 計分 ──────────────────────────────────────────────────────────
+  // ── 計分 + 一致性檢驗 ────────────────────────────────────────────
   function calcResult() {
-    const totals = {}, maxes = {};
-    Object.keys(TRAIT_META).forEach(t => { totals[t]=0; maxes[t]=0; });
+    const totals = {}, maxes = {}, rawScores = {};
+    Object.keys(TRAIT_META).forEach(t => { totals[t]=0; maxes[t]=0; rawScores[t]=[]; });
+
     active.behavior.forEach(q => {
       const a = bAns[q.id];
-      if (a !== undefined) { totals[q.trait] += q.s[a]; maxes[q.trait] += 4; }
+      if (a !== undefined) {
+        totals[q.trait] += q.s[a];
+        maxes[q.trait]  += 4;
+        rawScores[q.trait].push({ qid:q.id, score:q.s[a], q:q.q, ans:q.opts[a], reverse:!!q.reverse });
+      }
     });
+
     const traitScores = {};
     Object.keys(TRAIT_META).forEach(t => {
       traitScores[t] = maxes[t] > 0 ? Math.round((totals[t]/maxes[t])*100) : 0;
     });
+
+    // ── 一致性警示 ───────────────────────────────────────────────────
+    // 同一維度內：若最高分與最低分相差 ≥ 3 分（滿分4），標記為「答題不一致」
+    const warnings = {};
+    Object.keys(TRAIT_META).forEach(t => {
+      const scores = rawScores[t].map(r => r.score);
+      if (scores.length < 2) return;
+      const max = Math.max(...scores), min = Math.min(...scores);
+      if (max - min >= 3) {
+        // 找出高分題與低分題
+        const highQ = rawScores[t].find(r => r.score === max);
+        const lowQ  = rawScores[t].find(r => r.score === min);
+        warnings[t] = {
+          level: max - min >= 3 ? "high" : "mid", // 預留 mid 等級
+          diff: max - min,
+          highQ: highQ?.q,  highAns: highQ?.ans,
+          lowQ:  lowQ?.q,   lowAns:  lowQ?.ans,
+          msg: `答題出現明顯落差（差距 ${max - min} 分），建議面試中追問確認`
+        };
+      }
+    });
+
     const dc = { D:0, I:0, S:0, C:0 };
     active.disc.forEach(q => {
       const a = dAns[q.id];
@@ -425,7 +575,8 @@ export default function ManiTalentV3() {
     const discBonus = DISC_INFO[primary].weight;
     const avg = Object.values(traitScores).reduce((s,v)=>s+v,0)/6;
     const total = Math.round(avg*0.75 + discBonus*0.25);
-    return { traitScores, dc, primary, total };
+
+    return { traitScores, dc, primary, total, warnings };
   }
 
   // ── GAS 寫入（單次，包含面試官補充）────────────────────────────
@@ -842,6 +993,14 @@ ${res.total >= 75 ? "✅ 建議列為優先人選，安排主管複試。" : res
                 fontSize:15, fontWeight:800 }}>
                 {recommend.icon} {recommend.label}
               </div>
+              {/* 一致性警示彙總 */}
+              {Object.keys(result.warnings||{}).length > 0 && (
+                <div style={{ marginTop:12, display:"inline-flex", alignItems:"center", gap:6,
+                  background:"#FEF3C7", border:"1px solid #FCD34D",
+                  borderRadius:20, padding:"5px 14px", fontSize:12, color:"#92400E", fontWeight:700 }}>
+                  ⚠️ {Object.keys(result.warnings).length} 個維度答題不一致，建議面試追問
+                </div>
+              )}
             </div>
 
             {/* 六大維度 */}
@@ -853,7 +1012,7 @@ ${res.total >= 75 ? "✅ 建議列為優先人選，安排主管複試。" : res
                 <TrendingUp size={16} color={T.accent} /> 六大核心行為維度
               </h3>
               {Object.entries(result.traitScores).map(([k,v]) => (
-                <TraitBar key={k} trait={k} value={v} />
+                <TraitBar key={k} trait={k} value={v} warning={result.warnings?.[k]} />
               ))}
             </div>
 
@@ -895,23 +1054,40 @@ ${res.total >= 75 ? "✅ 建議列為優先人選，安排主管複試。" : res
               </button>
               {showLog && (
                 <div style={{ marginTop:14 }}>
+                  <div style={{ fontSize:11, color:T.muted, marginBottom:10,
+                    padding:"6px 10px", background:T.inputBg, borderRadius:6,
+                    display:"flex", gap:12, flexWrap:"wrap" }}>
+                    <span>🔴 = 誤導性反向題</span>
+                    <span style={{ color:T.green }}>■ 高分（3–4）</span>
+                    <span style={{ color:T.gold }}>■ 中分（2）</span>
+                    <span style={{ color:T.red }}>■ 低分（0–1）</span>
+                  </div>
                   {active.behavior.map((q, qi) => {
                     const a = bAns[q.id];
                     const sc = a !== undefined ? q.s[a] : null;
                     const scColor = sc >= 3 ? T.green : sc >= 2 ? T.gold : T.red;
+                    const isReverse = !!q.reverse;
                     return (
                       <div key={q.id} style={{ padding:"10px 0",
                         borderBottom:`1px solid ${T.border}`, fontSize:12 }}>
-                        <div style={{ color:T.muted, marginBottom:3 }}>
-                          Q{qi+1}. [{TRAIT_META[q.trait]?.label}] {q.q}
+                        <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:4 }}>
+                          <span style={{ color:T.muted }}>Q{qi+1}.</span>
+                          <span style={{ fontSize:10, fontWeight:700, padding:"1px 6px",
+                            borderRadius:4,
+                            background: isReverse ? "#FEE2E2" : `${TRAIT_META[q.trait]?.color}15`,
+                            color: isReverse ? T.red : TRAIT_META[q.trait]?.color }}>
+                            {isReverse ? "🔴 反向題" : TRAIT_META[q.trait]?.label}
+                          </span>
                         </div>
+                        <div style={{ color:T.sub, marginBottom:5, lineHeight:1.5 }}>{q.q}</div>
                         <div style={{ display:"flex", gap:8, alignItems:"center" }}>
                           <span style={{ color:T.text, fontWeight:600 }}>
                             {a !== undefined ? `→ ${q.opts[a]}` : "（未作答）"}
                           </span>
                           {sc !== null && (
                             <span style={{ fontSize:11, fontWeight:800, color:scColor,
-                              background:`${scColor}14`, padding:"1px 7px", borderRadius:4 }}>
+                              background:`${scColor}14`, padding:"1px 7px", borderRadius:4,
+                              flexShrink:0 }}>
                               {sc} 分
                             </span>
                           )}
